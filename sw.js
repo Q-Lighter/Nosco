@@ -1,6 +1,6 @@
 // sw.js — caches the app shell on install, then serves from cache first.
 // Bump CACHE_NAME whenever you deploy changes, so old caches don't serve stale files.
-const CACHE_NAME = 'nosco-v1';
+const CACHE_NAME = 'nosco-v2';
 
 const APP_SHELL = [
   './',
@@ -10,6 +10,9 @@ const APP_SHELL = [
   'js/app.js',
   'js/crypto.js',
   'js/storage.js',
+  'js/ledger.js',
+  'js/charts.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js',
 ];
 
 self.addEventListener('install', (event) => {
