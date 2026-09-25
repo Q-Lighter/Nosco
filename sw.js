@@ -1,6 +1,6 @@
 // sw.js — caches the app shell on install, then serves from cache first.
 // Bump CACHE_NAME whenever you deploy changes, so old caches don't serve stale files.
-const CACHE_NAME = 'nosco-v2';
+const CACHE_NAME = 'nosco-v4';
 
 const APP_SHELL = [
   './',
@@ -17,7 +17,17 @@ const APP_SHELL = [
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
+    caches.open(CACHE_NAME).then((cache) =>
+      Promise.all(
+        APP_SHELL.map((url) =>
+          cache.add(url).catch((err) => {
+            // Don't let one blocked/failed resource (e.g. a CDN script an ad-blocker stops)
+            // sabotage the whole install — that's what left old versions stuck before.
+            console.warn('Nosco SW: could not cache', url, err);
+          })
+        )
+      )
+    )
   );
   self.skipWaiting();
 });
